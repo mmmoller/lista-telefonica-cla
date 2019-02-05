@@ -1,0 +1,17 @@
+doctype html
+html
+	head
+		title= title
+		
+		include ../dependency/all
+		
+	-if ( message != undefined && message.length){
+		.center
+			if ( message.toString().charAt(0) == '!')
+				div.alert.alert-danger #{message.toString().slice(1)}
+			else
+				div.alert.alert-success #{message}
+	-}
+	block content
+
+

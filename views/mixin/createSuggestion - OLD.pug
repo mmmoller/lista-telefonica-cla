@@ -1,0 +1,78 @@
+include ../functionScript/message
+include ../functionScript/checkRating
+
+mixin CreateSuggestion(infosys)
+    script.
+        $(document).ready(function() {
+            if (!window.location.search)
+                $('#toHide').hide()
+            else{
+                $('#name').val($.urlParam("search_name"))
+            }
+        });
+        $.urlParam = function(name){
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.search);
+            if (results==null) {
+                return null;
+            }
+            return decodeURI(results[1].replace(/[+]/g, " ")) || "";
+        }
+
+    .default-wrapper#toHide
+        input.form-control.margin(type='text', id='name', placeholder= "Name", required)
+
+        .input-group.form-group
+            .input-group-prepend
+                .input-group-text Old Password
+            input(type='password', name='old_password', class = 'form-control', required)
+
+        .input-group.form-group
+            .input-group-prepend
+                .input-group-text Teste
+            select.form-control(id="type")
+                -for (var key in infosys.types) {
+                    if (infosys.types.hasOwnProperty(key))
+                        option(value=key) #{key}
+                -}
+
+        .form-group
+            select.form-control(id="type").margin
+                -for (var key in infosys.types) {
+                    if (infosys.types.hasOwnProperty(key))
+                        option(value=key) #{key}
+                -}
+
+        input.form-control.margin(type='text', id='url', placeholder= "Url")
+
+        input.form-control.margin(type='number', id='rating', min="0", max = "10", step="0.1", placeholder="Rating", onkeyup="CheckRating(this)")
+
+        button.form-control.btn.btn-primary.btn-block.margin(id="btn", value="", onclick="CreateSuggestion(this)", style="margin-left: auto") Create Suggestion
+
+    script.
+        function CreateSuggestion(index){
+            
+            var name = document.getElementById("name")
+            var type = document.getElementById("type")
+            var url = document.getElementById("url")
+            if (!url.value){
+                alert("Please, insert a URL.")
+                return
+            }
+            var rating = document.getElementById("rating");
+            if (!rating.value){
+                alert("Please, insert a rating.")
+                return
+            }
+
+            $.post("/create_suggestion",{name:name.value, rating:rating.value,
+            type: type.value, url:url.value}, function(data){
+                
+                if (data.success){
+                    name.value = "";
+                    url.value = "";
+                    rating.value = "";
+                }
+
+                Message(data.message)
+            });
+        }

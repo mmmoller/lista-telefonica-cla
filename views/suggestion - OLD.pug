@@ -1,0 +1,25 @@
+extends layout/in
+
+block content
+
+    include mixin/rating
+
+    include mixin/userTable
+
+    .default-wrapper
+        h1 #{suggestion.name}
+
+        | Friends: 
+        +Rating(true, suggestion, ownUser)
+        br
+        | All users: 
+        +Rating(false, suggestion, ownUser)
+
+
+    -var usersId = []
+    - for (var id in suggestion.userRating){
+        if (suggestion.userRating.hasOwnProperty(id))
+            -usersId.push(id)
+    - }
+
+    +Usertable(suggestion, infosys, usersId, ownUser)

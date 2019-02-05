@@ -1,0 +1,9 @@
+extends layout/in
+
+block content
+
+    include mixin/suggestionTable
+    +Suggestiontable(undefined, suggestion, infosys, ownUser)
+
+    include mixin/createSuggestion
+    +CreateSuggestion(infosys)

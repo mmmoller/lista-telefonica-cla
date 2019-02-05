@@ -1,0 +1,121 @@
+body {
+	height: 100%;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	text-align: center;
+	padding-top:0px;
+	background-color:#99CCFF;
+}
+
+input {
+    text-align:center;
+}
+
+h1 {
+	margin-bottom: 20px;
+}
+
+.btn-group+.btn-group{
+    margin-left: -5px;
+}
+
+.fa-bookmark{
+	background-color: transparent;
+	color: goldenrod;
+	font-size: 25px
+}
+
+.fa-user-plus, .fa-plus{
+	background-color: transparent;
+	color: blue;
+	font-size: 25px;
+}
+
+.fa-user-minus, .fa-times{
+	background-color: transparent;
+	color:crimson;
+	font-size: 25px;
+}
+
+.body-background {
+    background-color:#99CCFF;
+    background-size: 100%;
+}
+
+.menu-bar{
+	border: 2px solid #3333ff;
+	position: relative;
+	margin-top: 0px;
+	margin-bottom: 20px;
+	margin-right: auto;
+	margin-left: auto;
+	border-radius: 5px;
+	padding: 10px 10px 10px 10px;
+	background-color: #e7e9ff;
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3); 
+	overflow: auto;
+}
+
+.default-wrapper{
+	border: 2px solid #3333ff;
+	position: relative;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	margin-right: auto;
+	margin-left: auto;
+	border-radius: 5px;
+	width: 40%;
+	height: 100%;
+	padding: 20px 20px 20px 20px;
+	background-color: #e7e9ff;
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3); 
+	overflow: auto;
+}
+
+.default-table-wrapper{
+	border: 2px solid #3333ff;
+	position: relative;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	margin-right: auto;
+	margin-left: auto;
+	border-radius: 5px;
+	width: 95%;
+	height: 10%;
+	padding: 20px 20px 20px 20px;
+	background-color: #e7e9ff;
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3); 
+	overflow: auto;
+}
+
+.default-table{
+	width: 100%;
+}
+
+.default-table th, .default-table td{
+	text-align: center;
+	padding: 5px 5px 5px 5px;
+	font-size: 15px;
+	background-color: #e7e9ff;
+}
+
+.margin{
+	margin: 3px;
+}
+
+.button-margin{
+	margin: 3px;
+}
+
+.left{
+	margin-left: auto;
+}
+
+.vertical-bar{
+	border-right: 1px solid rgb(148, 148, 148);
+}
+
+.horizontal-bar{
+	border-bottom: 1px solid rgb(148, 148, 148);
+}
+
+.selectBox{border-radius:4px;border:1px solid #AAAAAA;}

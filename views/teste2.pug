@@ -1,0 +1,37 @@
+extends layout/out
+
+block content
+    div#ourData(data-types = infosys.types, style="width:50%;margin:auto")
+        select.form-control(id="selectCategory", onChange="UpdateNext(this)")
+            option(value="" selected disabled hidden) Category
+            -for(var i = 0; i < infosys.categories.length; i++){
+                option(value=infosys.categories[i]) #{infosys.categories[i]}
+            -}
+
+        select.form-control(id="selectIcon", style="visibility: hidden")
+
+    script.
+        function UpdateNext(index){
+            var selectIcon = document.getElementById("selectIcon");
+
+            selectIcon.style.visibility = "visible";
+
+            // cleaning options
+            while (selectIcon.firstChild) {
+                selectIcon.removeChild(selectIcon.firstChild);
+            }
+
+            var data = JSON.parse(document.getElementById("ourData").dataset.types);
+
+            for (var key in data) {
+                if (data.hasOwnProperty(key)){
+
+                    if (data[key].category.indexOf(index.value) > -1){
+                        var option = document.createElement("option")
+                        option.text = key
+                        option.value = key
+                        selectIcon.appendChild(option)
+                    }
+                }
+            }
+        }

@@ -1,0 +1,189 @@
+include ../functionScript/message
+include ../functionScript/checkRating
+
+mixin CreateSuggestion(infosys)
+
+    .default-wrapper#storedData(data-types = infosys.types)
+
+        .form-inline.form-group
+            .input-group.form-group
+                .input-group-prepend
+                    .input-group-text Name
+                input.form-control(type='text', id='suggestionName', placeholder= "Suggestion's name", required)
+            input.form-group.form-control.left(type='number', id='rating', min="0",
+             max = "10", step="0.1", placeholder="Rating", onkeyup="CheckRating(this)")
+
+        .form-inline.form-group
+            select.form-control(id="selectCategory", onChange="UpdateSelectIcon(this)")
+                option(value="" selected disabled hidden) Category
+                -for(var i = 0; i < infosys.categories.length; i++){
+                    option(value=infosys.categories[i]) #{infosys.categories[i]}
+                -}
+
+            // To Clear and Add SelectIcon based on selected Category.
+            script.
+                function UpdateSelectIcon(index){
+                    var selectIcon = document.getElementsByName("selectIcon");
+
+                    // cleaning options
+                    for (var i = 0; i < selectIcon.length; i++){
+                        while (selectIcon[i].firstChild) {
+                            selectIcon[i].removeChild(selectIcon[i].firstChild);
+                        }
+                    }
+
+                    var data = JSON.parse(document.getElementById("storedData").dataset.types);
+
+                    for (var key in data) {
+                        if (data.hasOwnProperty(key)){
+
+                            if (data[key].category.indexOf(index.value) > -1){
+                                for (var i = 0; i < selectIcon.length; i++){
+                                    var option = document.createElement("option")
+                                    option.text = key
+                                    option.value = key
+                                    selectIcon[i].appendChild(option)
+                                }
+                            }
+                        }
+                    }
+                }
+
+            button.form-control.btn.btn-primary.btn-block.margin(id="btnAddLink",
+             value="", onclick="AddSelectIcon(this)", style="margin-left:auto") Add Icon/Url option
+
+            // To Add SelectIcon and Url
+            script.
+                function AddSelectIcon(index){
+                    var div = document.getElementById("DivSelectIcon")
+
+                    var divFormInline = document.createElement("div")
+                    divFormInline.setAttribute("class", "form-inline form-group")
+
+                    var selectIcon = document.createElement("select")
+                    selectIcon.setAttribute("name", "selectIcon")
+                    selectIcon.setAttribute("class", "form-control")
+                    selectIcon.setAttribute("style", "margin-right:auto")
+
+                    var data = JSON.parse(document.getElementById("storedData").dataset.types);
+
+                    var selectCategory = document.getElementById("selectCategory")
+
+
+                    if (selectCategory.value == ""){
+                        var defaultOption = document.createElement("option")
+                        defaultOption.value = "";
+                        defaultOption.text = "Icon";
+                        defaultOption.selected = true;
+                        defaultOption.disabled = true;
+                        defaultOption.hidden = true;
+                        selectIcon.appendChild(defaultOption)
+                    }
+
+                    for (var key in data) {
+                        if (data.hasOwnProperty(key)){
+                            if (data[key].category.indexOf(selectCategory.value) > -1){
+                                var option = document.createElement("option")
+                                option.text = key
+                                option.value = key
+                                selectIcon.appendChild(option)
+                            }
+                        }
+                    }
+
+                    divFormInline.appendChild(selectIcon)
+
+                    var urlTextField = document.createElement("input")
+                    urlTextField.setAttribute("name", "url")
+                    urlTextField.setAttribute("placeholder", "Url")
+                    urlTextField.setAttribute("class", "form-control")
+                    urlTextField.setAttribute("style", "margin:auto")
+
+                    divFormInline.appendChild(urlTextField)
+
+                    var removeButton = document.createElement("input")
+                    removeButton.setAttribute("type", "button")
+                    removeButton.setAttribute("class", "form-control btn btn-danger")
+                    removeButton.setAttribute("onclick", "deleteRow(this)")
+                    removeButton.setAttribute("value", "X")
+                    removeButton.setAttribute("style", "margin-left:auto")
+
+                    divFormInline.appendChild(removeButton)
+
+                    div.appendChild(divFormInline)
+                }
+
+                function deleteRow(index) {
+                    var toDelete = index.parentNode;
+                    index.parentNode.parentNode.removeChild(toDelete)
+                }
+
+        div#DivSelectIcon
+
+        
+
+        button.form-group.btn.btn-primary.btn-block(id="btn", value="", onclick="CreateSuggestion(this)", style="margin-left: auto") Create Suggestion
+
+
+
+    // To complete name with the search option
+    script.
+        $(document).ready(function() {
+            if (!window.location.search)
+                $('#storedData').hide()
+            else{
+                $('#name').val($.urlParam("search_name"))
+            }
+        });
+        $.urlParam = function(name){
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.search);
+            if (results==null) {
+                return null;
+            }
+            return decodeURI(results[1].replace(/[+]/g, " ")) || "";
+        }
+
+    // To POST (Create Suggestion)
+    script.
+        function CreateSuggestion(index){
+            
+            var name = document.getElementById("suggestionName")
+            if (name.value == ""){
+                alert("Please, insert a Suggestion's Name")
+                return
+            }
+
+            var rating = document.getElementById("rating");
+
+            var category = document.getElementById("selectCategory")
+            if (category.value == ""){
+                alert("Please, insert a Category")
+                return
+            }
+
+            var type = document.getElementsByName("selectIcon")
+            var url = document.getElementsByName("url")
+            var link = {};
+
+            for (var i = 0; i < url.length; i++){
+                if (url[i].value){
+                    link[url[i].value] = type[i].value
+                }
+            }
+
+            console.log(link)
+            
+            return
+
+            $.post("/create_suggestion",{name:name.value, rating:rating.value,
+            category:category.value, link:link}, function(data){
+                
+                if (data.success){
+                    name.value = "";
+                    url.value = "";
+                    rating.value = "";
+                }
+
+                Message(data.message)
+            });
+        }
