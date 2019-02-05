@@ -1,0 +1,22 @@
+extends layout/out
+
+block content
+
+    input(type="file", id="file")
+
+    <script src="scripts/read-excel-file.min.js"></script>
+
+    script.
+        
+        const input = document.getElementById('file')
+
+        input.addEventListener('change', () => {
+        readXlsxFile(input.files[0]).then((data) => {
+            // `data` is an array of rows
+            // each row being an array of cells.
+                console.log(data)
+                $.post("/updateDB",{data:data}, function(data){
+                    alert("sucess")
+                });
+            })
+        })

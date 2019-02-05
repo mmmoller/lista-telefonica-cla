@@ -86,5 +86,9 @@ module.exports = function(passport){
 
 	});
 
+	router.get('/teste',function(req, res) {
+		res.render("teste")
+	});
+
 	return router;
 }
