@@ -1,5 +1,5 @@
 {
-  "name": "recomendations",
+  "name": "lista-telefonica-cla",
   "version": "0.0.1",
   "description": "A sample Node.js app using Express 4",
   "engines": {
@@ -12,7 +12,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "async": "^2.6.1",
     "bcrypt-nodejs": "*",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.3",
@@ -24,17 +23,14 @@
     "moment": "^2.18.1",
     "mongoose": "^5.3.8",
     "morgan": "^1.9.1",
-    "nodemailer": "^4.7.0",
     "nodemon": "^1.18.8",
     "passport": "~0.2.0",
-    "passport-facebook": "^2.1.1",
-    "passport-google-oauth": "^1.0.0",
     "passport-local": "~1.0.0",
     "pug": "^2.0.3",
     "serve-favicon": "^2.5.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://git.heroku.com/recomendations"
+    "url": "https://git.heroku.com/lista-telefonica-cla"
   }
 }

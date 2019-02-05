@@ -1,25 +1,86 @@
 var express = require('express');
 var router = express.Router();
 
+var isAuthenticated = require('../functions/isAuthenticated.js');
+var handleError = require('../functions/handleError.js');
+
+var User = require('../models/user');
+var Info = require('../models/info');
+var Infosys = require('../models/infosys');
+
+
 module.exports = function(passport){
 
-	var testeRelatedRouter = require('./teste.js')(passport);
-	router.use('/', testeRelatedRouter);
+	router.get('/', function(req,res){
 
-	var accountRelatedRouter = require('./account')(passport);
-	router.use('/', accountRelatedRouter);
+		if (!req.query["search"] || req.query["search"].length < 3){
+			res.render("index")
+		}
 
-	var suggestionRelatedRouter = require('./suggestion')(passport);
-	router.use('/', suggestionRelatedRouter);
+		else {
+			var query = {data: {'$regex': req.query["search"], "$options": "i"}}
 
-	var userRelatedRouter = require('./user')(passport);
-	router.use('/', userRelatedRouter);
+			Infosys.findOne({data: "Timestamp"}, function (err, infosys){
+				if (err) return handleError(err,req,res);
+				if (infosys){
+					console.log(infosys)
 
-	var authenticationRelatedRouter = require('./authentication')(passport);
-	router.use('/', authenticationRelatedRouter)
+					Info.find(query, function(err, info){
+						if (err) return handleError(err,req,res);
+						console.log(info)
+						res.render("index", {info: info, infosys: infosys})
+					});
 
-	var systemRelatedRouter = require('./system')(passport);
-	router.use('/', systemRelatedRouter);
+				}
+				else{
+
+					res.send("Contact admin, INFOSYS not found.")
+
+				}
+			});
+		}
+		
+	})
+
+	router.get('/init', function(req,res){
+		User.remove({}, function(err) {
+			var newUser = new User();
+			newUser.username = "admin";
+			newUser.password = newUser.generateHash("admin");
+
+			newUser.save(function(err) {
+				if (err) return handleError(err,req,res);
+				res.redirect("/");
+			});
+		});
+	});
+
+	router.get('/updateDB',function(req, res) {
+		res.render("updatedb")
+	});
+
+	router.post('/updateDB', function(req, res) {
+		console.log(req.body.data)
+		var data = req.body.data;
+
+		var newInfosys = new Infosys();
+		newInfosys.data = data[0];
+		newInfosys.size = data[0].length;
+		newInfosys.save(function(err) {
+			if (err) return handleError(err,req,res);
+		});
+
+		for (var i = 1; i < data.length; i++){
+			var newInfo = new Info();
+			newInfo.data = data[i];
+			newInfo.save(function(err) {
+				if (err) return handleError(err,req,res);
+			});
+		}
+
+		res.send({message: "updated"})
+
+	});
 
 	return router;
 }

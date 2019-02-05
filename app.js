@@ -19,12 +19,12 @@ var options = {
 };
 
 
-/*
+
 if (process.env.MONGOLAB_URI)
 	mongoose.connect(process.env.MONGOLAB_URI, options);
 else
 	mongoose.connect("mongodb://127.0.0.1/test", options);
-*/
+
     
 //#endregion
 
@@ -43,7 +43,6 @@ app.use(bodyParser.urlencoded( {extended:true}));
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
-//app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')))
 
 app.use(expressSession({secret: 'mySecretKey', saveUninitialized: true, resave: true}));
 
@@ -51,7 +50,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Using momentjs on views.
-app.locals.moment = require('moment');
+//app.locals.moment = require('moment');
 
  // Using the flash middleware provided by connect-flash to store messages in session
  // and displaying in templates

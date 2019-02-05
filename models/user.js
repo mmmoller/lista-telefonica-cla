@@ -4,46 +4,8 @@ var bcrypt   = require('bcrypt-nodejs');
 var userSchema = mongoose.Schema({
 
     username: String,
+    password: String
     
-    correlation: {type: Object, default: {}},
-
-    /*correlation:{
-        _id : {
-            //isFriend: Boolean, (OLD, NOT WORKING ANYMORE)
-            (forEach Category in Infosys){
-                Category: {
-                    ratingSum : Number
-                    ratingCount : Number
-                }
-            }
-        }
-    }*/
-
-    friendlist: [String],
-    bookmark: [String],
-    dontshow: [String],
-
-    permission: {type: Number, default: 0}, // 0: normal, 1: moderator, 2: admin
-
-    local            : {
-        email        : String,
-        password     : String,
-        resetPasswordToken       : String,
-        resetPasswordExpires : Date
-    },
-    google           : {
-        id           : String,
-        token        : String,
-        email        : String,
-        name         : String
-    },
-    facebook         : {
-        id           : String,
-        token        : String,
-        email        : String,
-        name         : String
-    },
-
 }, {minimize: false});
 
 // generating a hash

@@ -8,8 +8,6 @@ block content
 
     script.
         
-        //import readXlsxFile from 'read-excel-file'
-
         const input = document.getElementById('file')
 
         input.addEventListener('change', () => {
@@ -17,7 +15,7 @@ block content
             // `data` is an array of rows
             // each row being an array of cells.
                 console.log(data)
-                $.post("/teste",{data:data}, function(data){
+                $.post("/updateDB",{data:data}, function(data){
                     alert("sucess")
                 });
             })
