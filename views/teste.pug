@@ -15,7 +15,7 @@ block content
             // `data` is an array of rows
             // each row being an array of cells.
                 console.log(data)
-                $.post("/updateDB",{data:data}, function(data){
+                $.post("/updateinfo",{data:data}, function(data){
                     alert("sucess")
                 });
             })

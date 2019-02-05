@@ -55,11 +55,11 @@ module.exports = function(passport){
 		});
 	});
 
-	router.get('/updatedb',function(req, res) {
-		res.render("updatedb")
+	router.get('/updateinfo',function(req, res) {
+		res.render("updateinfo")
 	});
 
-	router.post('/updatedb', function(req, res) {
+	router.post('/updateinfo', function(req, res) {
 		//console.log(req.body.data)
 		var data = req.body.data;
 
