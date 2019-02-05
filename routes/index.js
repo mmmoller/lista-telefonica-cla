@@ -60,7 +60,7 @@ module.exports = function(passport){
 	});
 
 	router.post('/updatedb', function(req, res) {
-		console.log(req.body.data)
+		//console.log(req.body.data)
 		var data = req.body.data;
 
 		Infosys.remove({}, function(err) { 
