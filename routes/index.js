@@ -20,14 +20,14 @@ module.exports = function(passport){
 		else {
 			var query = {data: {'$regex': req.query["search"], "$options": "i"}}
 
-			Infosys.findOne({data: "Timestamp"}, function (err, infosys){
+			Infosys.findOne({}, function (err, infosys){
 				if (err) return handleError(err,req,res);
 				if (infosys){
-					console.log(infosys)
+					//console.log(infosys)
 
 					Info.find(query, function(err, info){
 						if (err) return handleError(err,req,res);
-						console.log(info)
+						//console.log(info)
 						res.render("index", {info: info, infosys: infosys})
 					});
 
@@ -55,28 +55,32 @@ module.exports = function(passport){
 		});
 	});
 
-	router.get('/updateDB',function(req, res) {
+	router.get('/updatedb',function(req, res) {
 		res.render("updatedb")
 	});
 
-	router.post('/updateDB', function(req, res) {
+	router.post('/updatedb', function(req, res) {
 		console.log(req.body.data)
 		var data = req.body.data;
 
-		var newInfosys = new Infosys();
-		newInfosys.data = data[0];
-		newInfosys.size = data[0].length;
-		newInfosys.save(function(err) {
-			if (err) return handleError(err,req,res);
-		});
-
-		for (var i = 1; i < data.length; i++){
-			var newInfo = new Info();
-			newInfo.data = data[i];
-			newInfo.save(function(err) {
+		Infosys.remove({}, function(err) { 
+			var newInfosys = new Infosys();
+			newInfosys.data = data[0];
+			newInfosys.size = data[0].length;
+			newInfosys.save(function(err) {
 				if (err) return handleError(err,req,res);
 			});
-		}
+		});
+
+		Info.remove({}, function(err) { 
+			for (var i = 1; i < data.length; i++){
+				var newInfo = new Info();
+				newInfo.data = data[i];
+				newInfo.save(function(err) {
+					if (err) return handleError(err,req,res);
+				});
+			}
+		});
 
 		res.send({message: "updated"})
 
