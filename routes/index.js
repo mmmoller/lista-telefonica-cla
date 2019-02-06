@@ -11,6 +11,7 @@ var Infosys = require('../models/infosys');
 
 module.exports = function(passport){
 
+	//#region VIEW SHEET
 	router.get('/', function(req,res){
 
 		if (!req.query["search"] || req.query["search"].length < 3){
@@ -41,25 +42,14 @@ module.exports = function(passport){
 		}
 		
 	})
+	//#endregion
 
-	router.get('/init', function(req,res){
-		User.remove({}, function(err) {
-			var newUser = new User();
-			newUser.username = "admin";
-			newUser.password = newUser.generateHash("admin");
-
-			newUser.save(function(err) {
-				if (err) return handleError(err,req,res);
-				res.redirect("/");
-			});
-		});
-	});
-
-	router.get('/updateinfo',function(req, res) {
+	//#region UPLOAD SHEET 
+	router.get('/updateinfo', isAuthenticated, function(req, res) {
 		res.render("updateinfo")
 	});
 
-	router.post('/updateinfo', function(req, res) {
+	router.post('/updateinfo', isAuthenticated, function(req, res) {
 		//console.log(req.body.data)
 		var data = req.body.data;
 
@@ -85,10 +75,42 @@ module.exports = function(passport){
 		res.send({message: "updated"})
 
 	});
+	//#endregion
 
-	router.get('/teste',function(req, res) {
-		res.render("teste")
+	//#region LOGIN/LOGOUT
+    // LOGOUT ==============================
+    router.get('/logout', function(req, res) {
+        req.logout();
+        res.redirect('/');
+    });
+
+	// LOGIN
+	router.get('/login', function(req, res) {
+		res.render('login', { message: req.flash('message') });
 	});
+
+	router.post('/login', passport.authenticate('local-login', {
+		successRedirect : '/updateinfo', // redirect to the secure account section
+		failureRedirect : '/login', // redirect back to the signup page if there is an error
+		failureFlash : true // allow flash messages
+	}));
+	//#endregion
+
+	//#region INITIALIZATION
+	/* 
+	router.get('/init', function(req,res){
+		User.remove({}, function(err) {
+			var newUser = new User();
+			newUser.username = "admin";
+			newUser.password = newUser.generateHash(process.env.ADMIN_PASS);
+
+			newUser.save(function(err) {
+				if (err) return handleError(err,req,res);
+				res.redirect("/");
+			});
+		});
+	});*/
+	//#endregion 
 
 	return router;
 }
