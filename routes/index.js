@@ -46,7 +46,7 @@ module.exports = function(passport){
 
 	//#region UPLOAD SHEET 
 	router.get('/updateinfo', isAuthenticated, function(req, res) {
-		res.render("updateinfo")
+		res.render("updateinfo", {message: "Upload a .xlsx sheet."})
 	});
 
 	router.post('/updateinfo', isAuthenticated, function(req, res) {
@@ -56,23 +56,27 @@ module.exports = function(passport){
 		Infosys.remove({}, function(err) { 
 			var newInfosys = new Infosys();
 			newInfosys.data = data[0];
-			newInfosys.size = data[0].length;
 			newInfosys.save(function(err) {
 				if (err) return handleError(err,req,res);
 			});
+
+			Info.remove({}, function(err) { 
+				for (var i = 1; i < data.length; i++){
+					var newInfo = new Info();
+					newInfo.data = data[i];
+					newInfo.save(function(err) {
+						if (err) return handleError(err,req,res);
+					});
+				}
+				res.send({message: "Succesfully updated!"})
+			});
+
+
 		});
 
-		Info.remove({}, function(err) { 
-			for (var i = 1; i < data.length; i++){
-				var newInfo = new Info();
-				newInfo.data = data[i];
-				newInfo.save(function(err) {
-					if (err) return handleError(err,req,res);
-				});
-			}
-		});
+		
 
-		res.send({message: "updated"})
+		
 
 	});
 	//#endregion
@@ -97,7 +101,7 @@ module.exports = function(passport){
 	//#endregion
 
 	//#region INITIALIZATION
-	/* 
+	/*
 	router.get('/init', function(req,res){
 		User.remove({}, function(err) {
 			var newUser = new User();
@@ -109,7 +113,8 @@ module.exports = function(passport){
 				res.redirect("/");
 			});
 		});
-	});*/
+	});
+	*/
 	//#endregion 
 
 	return router;
